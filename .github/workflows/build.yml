@@ -60,7 +60,7 @@ jobs:
         include:
           - platform: linux
             os: ubuntu-22.04
-            aarch: amd64
+            aarch: aarch64
             targets: AppImage,deb,rpm
     runs-on: ${{ matrix.os }}
     steps:
