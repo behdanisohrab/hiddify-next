@@ -58,34 +58,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: android-apk
-            os: ubuntu-latest
-            targets: apk
-
-          - platform: android-aab
-            os: ubuntu-latest
-            targets: aab
-
-          - platform: windows
-            os: windows-2019
-            aarch: aarch64
-            targets: exe,msix
-
           - platform: linux
             os: ubuntu-22.04
             aarch: amd64
             targets: AppImage,deb,rpm
-
-          - platform: macos
-            os: macos-13
-            aarch: universal
-            targets: dmg,pkg
-            
-          - platform: ios
-            os: macos-13
-            aarch: universal
-            filename: hiddify-ios
-            targets: ipa
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout
@@ -134,21 +110,7 @@ jobs:
           make ${{ matrix.platform }}-install-dependencies
 
 
-      - name: Setup Android Signing Properties
-        if: ${{ inputs.upload-artifact && startsWith(matrix.platform,'android') }}
-        run: |
-          echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 --decode > android/key.jks
-          echo "storeFile=$(pwd)/android/key.jks" > android/key.properties
-          echo "storePassword=${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> android/key.properties
 
-      - name: Setup Windows Signing Properties
-        if: ${{ inputs.upload-artifact && startsWith(matrix.platform,'windows') }}
-        run: |
-            [IO.File]::WriteAllBytes("windows\sign.pfx", [Convert]::FromBase64String("${{ secrets.WINDOWS_SIGNING_KEY }}"))
-            (Get-Content "windows\packaging\msix\make_config.yaml") -replace '^certificate_password:.*$', 'certificate_password: ${{ secrets.WINDOWS_SIGNING_PASSWORD }}' | Set-Content "windows\packaging\msix\make_config.yaml"
-        
       # - name: Temporary disable Permission Handler for windows due to its issue in permission
       #   if: ${{ startsWith(matrix.platform,'windows') }}
       #   run: |
