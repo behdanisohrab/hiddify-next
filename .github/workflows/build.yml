@@ -20,7 +20,7 @@ env:
   UPLOAD_ARTIFACT: "${{ inputs.upload-artifact }}"
   TAG_NAME: "${{ inputs.tag-name }}"
   TARGET_NAME_AppImage: "Hiddify-Linux-x64"
-  TARGET_NAME_deb: "Hiddify-Debian-x64"
+  TARGET_NAME_deb: "Hiddify-Debian-aarch64"
   TARGET_NAME_rpm: "Hiddify-rpm-x64"
   TARGET_NAME_apk: "Hiddify-Android"
   TARGET_NAME_aab: "Hiddify-Android"
@@ -68,7 +68,7 @@ jobs:
 
           - platform: windows
             os: windows-2019
-            aarch: amd64
+            aarch: aarch64
             targets: exe,msix
 
           - platform: linux
